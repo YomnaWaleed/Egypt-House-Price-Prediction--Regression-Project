@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .hero-section {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="card" style="width: 100%; height: 100%; margin-top: 50px;">
+                <div class="card-header" style="text-align: center;">
+                    <h1>Welcome to House Price Predictor</h1>
+                </div>
+                <div class="card-body">
+                    <form id="predictForm">
+                        <div class="row">
+                            <div class="col-md-6 form-group" style="text-align: center;">
+                                <label><b>Select the Location :</b></label>
+                                <select class="select-picker form-control" id="location" name="location" required>
+                                    {% for location in locations %}
+                                    <option value="{{ location }}">{{ location }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group" style="text-align: center;">
+                                <label><b>Enter BHK :</b></label>
+                                <input type="text" class="form-control" id="bhk" name="bhk" placeholder="Enter BHK">
+                            </div>
+
+                            <div class="col-md-6 form-group" style="text-align: center;">
+                                <label><b>Enter Size of House :</b></label>
+                                <input type="text" class="form-control" id="total_sqft" name="total_sqft" placeholder="Enter integer Size of House">
+                            </div>
+                            <div class="col-md-6 form-group" style="text-align: center">
+                                <label><b>Select House Type :</b></label>
+                                <select class="select-picker form-control" id="house_type" name="house_type" required="1">
+                                {% for house_type in house_types %}
+                                    <option value="{{ house_type }}">{{ house_type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group" style="text-align: center">
+                                <label><b>Select Floor :</b></label>
+                                <select class="select-picker form-control" id="floor" name="floor" required="1">
+                                    {% for floor in floors %}
+                                    <option value="{{ floor }}">{{ floor }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button type="button" class="btn btn-primary form-control" onclick="send_data()">Predict Price</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                    <div class="col-md-12" style="text-align: center;">
+                        <h3><span id="prediction"></span></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function send_data() {
+            var fd = new FormData(document.getElementById('predictForm'));
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            document.getElementById("prediction").innerHTML = "Wait, Predicting Price!...";
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    document.getElementById('prediction').innerHTML = "Prediction: " + xhr.responseText;
+                }
+            };
+            xhr.send(fd);
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
